@@ -1,0 +1,36 @@
+<p-toolbar
+  styleClass="bg-gray-900 shadow-2"
+  [style]="{
+    'border-radius': '3rem',
+    'background-image':
+      'linear-gradient(to right, var(--teal-300), var(--teal-400))',
+    margin: '20px'
+  }"
+>
+  <ng-template pTemplate="start">
+    <i class="pi pi-home text-2xl" style="font-size: 2.5rem; color: #fff"></i>
+  </ng-template>
+  <ng-template pTemplate="center">
+    <div class="flex flex-wrap align-items-center gap-3">
+      <h4 [style]="{ color: 'var(--primary-color-text)' }">
+        นัดหมายสัตว์เลี้ยง
+      </h4>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="end">
+    <div class="flex align-items-center gap-2">
+      <span class="font-bold text-bluegray-50">
+        สวัสดีคุณ {{ userFullName }}
+      </span>
+      <p
+        (click)="logout()"
+        class="bg-orange-500 p-2 border-circle cursor-pointer shadow-1"
+      >
+        <i
+          class="pi pi-sign-out"
+          style="font-size: 1rem; color: rgb(249, 249, 249)"
+        ></i>
+      </p>
+    </div>
+  </ng-template>
+</p-toolbar>

@@ -1,0 +1,22 @@
+// .bg-login
+//  {
+//   background: transparent;
+//   backdrop-filter: blur(15px);
+//  }
+
+* {
+  margin: 0;
+}
+
+::ng-deep .custom-button-login .p-button {
+  background-color: var(--gray-400) !important;
+  border-color: var(--gray-400)  !important;
+}
+
+::ng-deep .custom-button-login .p-button-label {
+  color: white !important;
+}
+
+::ng-deep .custom-button-login .p-button:hover {
+  background-color: var(--gray-400) !important;
+}

@@ -1,0 +1,41 @@
+<div
+  class="p-4 min-h-screen flex justify-content-center align-items-center surface-900 bg-cyan-700"
+>
+  <div class="bg-login surface-900 shadow-5 p-6 border-round-3xl h-30rem w-30rem">
+    <h2 class="text-center text-cyan-700">LOGIN</h2>
+    <div class="formgrid mt-6">
+      <div class="field mb-6">
+        <div class="flex flex-column gap-2 mb-4">
+          <label class="text-cyan-700" for="username">Username</label>
+          <input
+            pInputText
+            id="username"
+            [(ngModel)]="username"
+            name="username"
+            placeholder="Enter your username"
+          />
+        </div>
+
+        <div class="flex flex-column gap-2 mb-4">
+          <label class="text-cyan-700" for="password">Password</label>
+          <input
+            pInputText
+            id="password"
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Enter your password"
+          />
+        </div>
+
+        <p-button
+          class="flex justify-content-center custom-button-login"
+          label="Login"
+          (click)="login()"
+        ></p-button>
+
+        <small *ngIf="errorMessage" class="text-red-500">{{ errorMessage }}</small>
+      </div>
+    </div>
+  </div>
+</div>
