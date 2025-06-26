@@ -7,6 +7,9 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { DatePipe } from '@angular/common';
+import Swal from 'sweetalert2';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-appointment',
@@ -15,11 +18,11 @@ import { DatePipe } from '@angular/common';
   providers: [DatePipe],
 })
 export class AppointmentComponent implements OnInit {
-
   userForm!: FormGroup;
   petForm!: FormGroup;
   appointmentForm!: FormGroup;
   subjectForm!: FormGroup;
+  animalTypesForm!: FormGroup;
 
   statuses!: any[];
   data: DataAppointment[] = [];
@@ -55,15 +58,19 @@ export class AppointmentComponent implements OnInit {
 
   priceValue: number | null = null;
 
-  availableSlots: { id: number, time: string }[] = [];
+  availableSlots: { id: number; time: string }[] = [];
   user: any;
   addSubject: boolean = false;
+  changeAnimalTypes: boolean = false;
 
   constructor(
     private appointmentService: AppointmentService,
     private fb: FormBuilder,
     private datePipe: DatePipe,
-  ) { }
+    private confirmationService: ConfirmationService,
+    private router: Router,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     this.getData();
@@ -80,7 +87,6 @@ export class AppointmentComponent implements OnInit {
       this.userRole = this.users.user.role;
       this.user = this.users.user.id;
       this.getPets(this.users.user.id);
-
     } else {
       console.error('User not found in localStorage');
     }
@@ -159,15 +165,17 @@ export class AppointmentComponent implements OnInit {
       }
     });
 
-    this.appointmentForm.get('selectedSubject')?.valueChanges.subscribe((subject) => {
-      if (subject) {
-        this.selectedSubject = subject;
-        this.onSubjectSelected();
-      }
-    });
+    this.appointmentForm
+      .get('selectedSubject')
+      ?.valueChanges.subscribe((subject) => {
+        if (subject) {
+          this.selectedSubject = subject;
+          this.onSubjectSelected();
+        }
+      });
 
     this.getAppointment(this.users.user.id);
-    this.getAllWeight()
+    this.getAllWeight();
   }
 
   filterSubjects(selectedPetId: any): void {
@@ -239,7 +247,7 @@ export class AppointmentComponent implements OnInit {
         this.animalsTypes = [];
         console.error('Invalid data format for animalsTypes', res);
       }
-      // console.log('animalsTypes', this.animalsTypes);
+      console.log('animalsTypes', this.animalsTypes);
     });
   }
 
@@ -399,37 +407,22 @@ export class AppointmentComponent implements OnInit {
     });
   }
 
-  // getAnimalsTypesAndWeights() {
-  //   this.appointmentService.getAnimalsTypes().subscribe((res: any) => {
-  //     if (res.status && Array.isArray(res.animailType)) {
-  //       this.animalsTypes = res.animailType;
-  //     }
-  //   });
-
-    // this.appointmentService.getWeigth().subscribe((res: any) => {
-    //   if (res.status && Array.isArray(res.weight)) {
-    //     this.allWeight = res.weight;
-    //   } else {
-    //     console.error('Invalid weight data', res);
-    //   }
-    // });
-
   closeAddPet() {
     this.addPet = false;
     this.petForm.reset();
   }
 
-  openNew() { }
+  openNew() {}
 
-  deleteSelectedProducts() { }
+  deleteSelectedProducts() {}
 
-  editProduct() { }
+  editProduct() {}
 
-  deleteProduct() { }
+  deleteProduct() {}
 
-  hideDialog() { }
+  hideDialog() {}
 
-  saveProduct() { }
+  saveProduct() {}
 
   findIndexById(id: string): number {
     let index = -1;
@@ -570,6 +563,11 @@ export class AppointmentComponent implements OnInit {
     this.addAppoinment = true;
   }
 
+  showDialogChangeAnimalTypes() {
+    console.log('dialog change animalTypes');
+    this.changeAnimalTypes = true;
+  }
+
   showDialogAddPet() {
     console.log('dialog add pet');
     this.addPet = true;
@@ -579,29 +577,46 @@ export class AppointmentComponent implements OnInit {
     this.addAppoinment = false;
   }
 
+  closeChangeAnimalType(): void {
+    this.changeAnimalTypes = false;
+  }
+
   saveAppoinment(): void {
     const formData = this.appointmentForm.value;
-    console.log('Form Data:', formData);
-
     const payload = {
       userId: this.user,
       subject: formData.selectedSubject?.id || null,
       animalsType: formData.selectedPet?.animalsTypes || null,
       animalsBreed: formData.selectedPet?.breed || null,
       animalsName: formData.selectedPet?.name || null,
-      timeAppointment: this.combineDateTime(formData.selectedDate, formData.selectedTimeSlot?.time),
+      timeAppointment: this.combineDateTime(
+        formData.selectedDate,
+        formData.selectedTimeSlot?.time
+      ),
       createBy: this.user,
     };
-    console.log('Payload:', payload);
+
     this.appointmentService.createAppointment(payload).subscribe({
       next: (res) => {
-        console.log('จองสำเร็จ:', res);
-        alert('จองสำเร็จ');
+        this.messageService.add({
+          severity: 'success',
+          summary: 'สำเร็จ',
+          detail: 'จองสำเร็จ',
+        });
         this.appointmentForm.reset();
+        this.addAppoinment = false;
+        window.location.reload();
       },
       error: (err) => {
-        console.error('เกิดข้อผิดพลาด:', err);
-      }
+        const errorMessage =
+          err?.error?.message || 'เกิดข้อผิดพลาดในการจอง กรุณาลองใหม่อีกครั้ง';
+
+        this.messageService.add({
+          severity: 'error',
+          summary: 'ผิดพลาด',
+          detail: errorMessage,
+        });
+      },
     });
   }
 
@@ -609,7 +624,7 @@ export class AppointmentComponent implements OnInit {
     const [hours, minutes] = time.split(':');
     const newDate = new Date(date);
     newDate.setHours(Number(hours), Number(minutes), 0);
-    return newDate.toISOString(); // หรือ .toLocaleString() แล้วแต่ backend ต้องการ
+    return newDate.toISOString();
   }
 
   onWeightChange(event: any) {
@@ -651,7 +666,6 @@ export class AppointmentComponent implements OnInit {
   saveSubjct() {
     console.log('saveSubjct', this.subjectForm.value);
     if (this.subjectForm.valid) {
-
       let loggedInUserId: number | null = null;
 
       if (this.userData) {
@@ -688,6 +702,7 @@ export class AppointmentComponent implements OnInit {
           alert('บันทึกข้อมูลสำเร็จ');
           this.subjectForm.reset();
           this.addSubject = false;
+          window.location.reload();
         },
         error: (err) => {
           console.error('Error saving subject:', err);
@@ -695,6 +710,69 @@ export class AppointmentComponent implements OnInit {
         },
       });
     }
+  }
 
+  editAnimalTypes() {
+    console.log('editAnimalTypes');
+    this.changeAnimalTypes = false;
+  }
+
+  deleteAnimalType(id: number): void {
+    this.confirmationService.confirm({
+      message: 'คุณต้องการลบประเภทสัตว์เลี้ยงนี้หรือไม่?',
+      header: 'ยืนยันการลบ',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'ลบ',
+      rejectLabel: 'ยกเลิก',
+      accept: () => {
+        this.animalsTypes = this.animalsTypes.filter((type) => type.id !== id);
+        this.appointmentService.removeAnimalTypes(id).subscribe(
+          () => {},
+          (error) => {
+            console.error('Error deleting animal type', error);
+          }
+        );
+      },
+    });
+  }
+
+  openManagePet() {
+    this.router.navigate(['/manage-pet']);
+  }
+
+  openManageUser() {
+    this.router.navigate(['/manage-user']);
+  }
+
+  updateStatus(appointmentId: number, status: number) {
+    console.log('updateStatus', appointmentId, status);
+    this.appointmentService
+      .updateStatus(appointmentId, status.toString())
+      .subscribe({
+        next: (res) => {
+          console.log('อัปเดตสำเร็จ', res);
+          window.location.reload();
+        },
+        error: (err) => {
+          console.error('อัปเดตล้มเหลว', err);
+        },
+      });
+  }
+
+  updateStatusWithConfirm(appointmentId: number, status: number) {
+    console.log('updateStatusWithConfirm', appointmentId, status);
+    const actionText = status === 1 ? 'ยืนยันการจอง' : 'ยกเลิกการจอง';
+
+    this.confirmationService.confirm({
+      message: `คุณต้องการ ${actionText} ใช่หรือไม่?`,
+      header: 'ยืนยันการทำรายการ',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.updateStatus(appointmentId, status);
+      },
+      reject: () => {
+        console.log('ยกเลิกการทำรายการ');
+      },
+    });
   }
 }

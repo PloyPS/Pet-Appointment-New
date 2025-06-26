@@ -85,9 +85,7 @@ export class AppointmentService {
     );
   }
 
-  getTimeByDate(
-    date: string,
-  ): Observable<any> {
+  getTimeByDate(date: string): Observable<any> {
     return this.http.get(
       `${environment.baseUrl}${config.api.endpoint.appointment.getTimeBtDate}?date=${date}`
     );
@@ -124,6 +122,27 @@ export class AppointmentService {
     );
   }
 
+  removeAnimalTypes(id: number) {
+    console.log('id', id);
+    return this.http.patch(
+      `${environment.baseUrl}${config.api.endpoint.user.removeAnimalTypes}/${id}`,
+      {}
+    );
+  }
+
+  getAllPets() {
+    return this.http.get(
+      `${environment.baseUrl}${config.api.endpoint.user.getAllPets}`
+    );
+  }
+
+  getAllWeightEdit(animalTypeId: number) {
+    return this.http.get(
+      `${environment.baseUrl}${config.api.endpoint.user.getAllWeightEdit}`,
+      { params: { animalTypeId: animalTypeId.toString() } }
+    );
+  }
+
   getData(): Observable<DataAppointment[]> {
     return of([
       {
@@ -139,4 +158,43 @@ export class AppointmentService {
     ]);
   }
 
+  editUser(data: any, id: number) {
+    console.log('data', data);
+    return this.http.patch(
+      `${environment.baseUrl}${config.api.endpoint.user.editUser}/${id}`,
+      data
+    );
+  }
+
+  removeUser(id: number) {
+    console.log('id', id);
+    return this.http.patch(
+      `${environment.baseUrl}${config.api.endpoint.user.removeUser}/${id}`,
+      {}
+    );
+  }
+
+  removePet(id: number) {
+    console.log('id', id);
+    return this.http.patch(
+      `${environment.baseUrl}${config.api.endpoint.user.removePet}/${id}`,
+      {}
+    );
+  }
+
+  updateStatus(id: number, status: string) {
+    console.log('id', id);
+    return this.http.patch(
+      `${environment.baseUrl}${config.api.endpoint.appointment.updateStatus}${id}`,
+      { status }
+    );
+  }
+
+  editPet(data: any, id: number) {
+    console.log('data', data);
+    return this.http.patch(
+      `${environment.baseUrl}${config.api.endpoint.user.editPet}/${id}`,
+      data
+    );
+  }
 }

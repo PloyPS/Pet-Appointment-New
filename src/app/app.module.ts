@@ -30,12 +30,18 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { CalendarModule } from 'primeng/calendar';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ManagePetComponent } from './page/manage-pet/manage-pet.component';
+import { ManageUserComponent } from './page/manage-user/manage-user.component';
+import { CardModule } from 'primeng/card';
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     AppointmentComponent,
     NavbarComponent,
+    ManagePetComponent,
+    ManageUserComponent,
   ],
   imports: [
     BrowserModule,
@@ -65,13 +71,14 @@ import { CalendarModule } from 'primeng/calendar';
     InputNumberModule,
     ReactiveFormsModule,
     HttpClientModule,
+    CardModule,
     RouterModule.forRoot([
       { path: '', component: LoginComponent },
       { path: 'appointment', component: AppointmentComponent },
     ]),
   ],
 
-  providers: [],
+  providers: [ConfirmationService, MessageService],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
