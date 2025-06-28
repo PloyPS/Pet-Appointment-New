@@ -11,6 +11,13 @@ export const config = {
         profile: '/users/profile',
         addUser: '/users/save',
         addSubject: '/users/save-subjects',
+        removeAnimalTypes: '/users',
+        getAllPets: '/users/pets-all',
+        getAllWeightEdit: '/users/editpet/all-weight',
+        editUser: '/users/update-user',
+        removeUser: '/users/delete-user',
+        removePet: '/users/delete-pet',
+        editPet: '/users/edit-pet',
       },
       appointment: {
         getPets: '/users/pets',
@@ -24,6 +31,7 @@ export const config = {
         createAppointment: '/appoinment/create',
         getAppointment: '/appoinment',
         getAllweight: '/users/all-weight',
+        updateStatus: '/appoinment/status/',
       }
     },
   },

@@ -5,13 +5,15 @@
 }
 
 .button-add-user {
-  float: right;
+  margin: 30px;
+}
+
+.button-change-animal-types {
   margin: 30px;
 }
 
 .button-add-appointment {
-  float: right;
-  margin: 30px 0px 30px 30px;
+  margin: 30px;
 }
 
 ::ng-deep .p-button.p-button-info {
@@ -26,3 +28,8 @@
   // width: 300px !important;
   height: 100% !important;
 }
+
+.swal-zindex {
+  z-index: 1300 !important;
+}
+
