@@ -9,8 +9,8 @@
 }
 
 ::ng-deep .custom-button-login .p-button {
-  background-color: var(--gray-400) !important;
-  border-color: var(--gray-400)  !important;
+  background-color: var(--blue-500);
+  border-color: var(--blue-500)  !important;
 }
 
 ::ng-deep .custom-button-login .p-button-label {
@@ -18,5 +18,5 @@
 }
 
 ::ng-deep .custom-button-login .p-button:hover {
-  background-color: var(--gray-400) !important;
+  background-color: var(--blue-300) !important;
 }

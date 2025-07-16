@@ -1,12 +1,14 @@
 <div
-  class="p-4 min-h-screen flex justify-content-center align-items-center surface-900 bg-cyan-700"
+  class="p-4 min-h-screen flex justify-content-center align-items-center surface-900 bg-primary-200"
 >
-  <div class="bg-login surface-900 shadow-5 p-6 border-round-3xl h-30rem w-30rem">
-    <h2 class="text-center text-cyan-700">LOGIN</h2>
+  <div
+    class="bg-login bg-primary-300 shadow-5 p-6 border-round-3xl h-30rem w-30rem"
+  >
+    <h2 class="text-center">LOGIN</h2>
     <div class="formgrid mt-6">
-      <div class="field mb-6">
+      <div class="field mb-4">
         <div class="flex flex-column gap-2 mb-4">
-          <label class="text-cyan-700" for="username">Username</label>
+          <label class="" for="username">Username</label>
           <input
             pInputText
             id="username"
@@ -16,8 +18,8 @@
           />
         </div>
 
-        <div class="flex flex-column gap-2 mb-4">
-          <label class="text-cyan-700" for="password">Password</label>
+        <div class="flex flex-column gap-2 mb-6">
+          <label class="" for="password">Password</label>
           <input
             pInputText
             id="password"
@@ -29,12 +31,15 @@
         </div>
 
         <p-button
-          class="flex justify-content-center custom-button-login"
+          class="flex justify-content-center custom-button-login bg-primary-300"
           label="Login"
           (click)="login()"
         ></p-button>
-
-        <small *ngIf="errorMessage" class="text-red-500">{{ errorMessage }}</small>
+        <div class="flex justify-content-center mt-2">
+          <small *ngIf="errorMessage" class="text-red-500 mt-5 text-lg">{{
+            errorMessage
+          }}</small>
+        </div>
       </div>
     </div>
   </div>

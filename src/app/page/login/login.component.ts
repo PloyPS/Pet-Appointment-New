@@ -31,11 +31,11 @@ export class LoginComponent {
         localStorage.setItem('user', JSON.stringify(result));
         this.router.navigate(['/appointment']);
       } else {
-        this.errorMessage = 'Invalid username or password';
+        this.errorMessage = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
       }
     } catch (error) {
       console.error('Login error:', error);
-      this.errorMessage = 'An error occurred during login';
+      this.errorMessage = 'เกิดข้อผิดพลาดระหว่างการเข้าสู่ระบบ';
     }
   }
 
