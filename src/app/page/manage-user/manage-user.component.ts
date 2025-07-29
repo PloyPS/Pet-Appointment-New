@@ -48,27 +48,40 @@ export class ManageUserComponent {
   }
 
   removeUser(userId: number) {
-    this.appointmentService.removeUser(userId).subscribe(
-      (res: any) => {
-        console.log('res', res);
-        this.user = res;
+    Swal.fire({
+      title: 'คุณแน่ใจหรือไม่?',
+      text: 'คุณต้องการลบสัตว์เลี้ยงนี้ใช่หรือไม่?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'ใช่, ลบเลย!',
+      cancelButtonText: 'ยกเลิก',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.appointmentService.removeUser(userId).subscribe(
+          (res: any) => {
+            console.log('res', res);
+            this.user = res;
 
-        Swal.fire({
-          icon: 'success',
-          title: 'ลบข้อมูลสำเร็จ',
-          text: 'ผู้ใช้ถูกลบออกจากระบบแล้ว',
-        }).then(() => {
-          window.location.reload();
-        });
-      },
-      (error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'เกิดข้อผิดพลาด',
-          text: 'ไม่สามารถลบผู้ใช้ได้',
-        });
+            Swal.fire({
+              icon: 'success',
+              title: 'ลบข้อมูลสำเร็จ',
+              text: 'ผู้ใช้ถูกลบออกจากระบบแล้ว',
+            }).then(() => {
+              window.location.reload();
+            });
+          },
+          (error) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'เกิดข้อผิดพลาด',
+              text: 'ไม่สามารถลบผู้ใช้ได้',
+            });
+          }
+        );
       }
-    );
+    });
   }
 
   closeChangeUser() {
